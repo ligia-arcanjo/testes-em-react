@@ -36,4 +36,14 @@ describe('Testa o componente <App.js />', () => {
     userEvent.click(favoriteLinkEl);
     expect(history.location.pathname).toEqual('/favorites');
   });
+
+  it('Verifica se é redirecionado para Not Found ao acessar uma URL inexistente.', () => {
+    const { history } = renderWithRouter(<App />);
+    history.push('rota-nao-existente');
+
+    const titleNotFound = screen.getByRole('heading',
+      { name: /Page requested not found/i, level: 2 });
+
+    expect(titleNotFound).toBeInTheDocument();
+  });
 });
