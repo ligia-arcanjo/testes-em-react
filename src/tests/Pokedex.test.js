@@ -39,4 +39,11 @@ describe('Testa o componente Pokedex.js', () => {
         }
       });
     });
+
+  it('Verifica se é mostrado apenas um Pokémon por vez.', () => {
+    const pokemonNameEl = screen.getAllByTestId('pokemon-name');
+    const pokemonTypeEl = screen.getAllByTestId('pokemon-type');
+    const pokemonWeighEl = screen.getAllByTestId('pokemon-weight');
+    expect(pokemonNameEl && pokemonTypeEl && pokemonWeighEl).toHaveLength(1);
+  });
 });
