@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import App from '../App';
 import renderWithRouter from './renderWithRouter';
 
-describe('Testa o componente <App.js />', () => {
+describe('Testa o componente App.js', () => {
   it('Verifica se a página inicial contém um conjunto de links de navegação', () => {
     renderWithRouter(<App />);
     const homeLinkEl = screen.getByRole('link', { name: /Home/i });
