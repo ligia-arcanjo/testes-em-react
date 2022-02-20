@@ -81,4 +81,27 @@ describe('Testa o componente Pokedex.js', () => {
     const buttonAllEl = screen.getByRole('button', { name: /All/i });
     expect(buttonAllEl).toBeInTheDocument();
   });
+
+  it('Verifica se a Pokédex contém um botão para resetar o filtro', () => {
+    // Ao carregar a página, o filtro selecionado deverá ser All;
+    // O texto do botão deve ser All;
+    const buttonAllEl = screen.getByRole('button', { name: /All/i });
+    expect(buttonAllEl).toBeInTheDocument();
+
+    // A Pokedéx deverá mostrar os Pokémons normalmente (sem filtros) quando o botão All for clicado;
+    const buttonBugEl = screen.getByRole('button', { name: /Bug/i });
+    const buttonNextPokemon = screen.getByTestId('next-pokemon');
+
+    userEvent.click(buttonBugEl);
+    userEvent.click(buttonAllEl);
+
+    const pokemonsName = pokemons.map((pokemon) => pokemon.name);
+    pokemonsName.forEach((pokeName, index) => {
+      if (index > 0) {
+        userEvent.click(buttonNextPokemon);
+        const textPokemonName = screen.getByText(pokeName);
+        expect(textPokemonName).toBeInTheDocument();
+      }
+    });
+  });
 });
