@@ -46,4 +46,39 @@ describe('Testa o componente Pokedex.js', () => {
     const pokemonWeighEl = screen.getAllByTestId('pokemon-weight');
     expect(pokemonNameEl && pokemonTypeEl && pokemonWeighEl).toHaveLength(1);
   });
+
+  it('Verifica se a Pokédex tem os botões de filtro.', () => {
+    const buttonNextPokemon = screen.getByTestId('next-pokemon');
+
+    // Deve existir um botão de filtragem para cada tipo de Pokémon, sem repetição.
+    const NUMBER_OF_TYPES = 7;
+    const buttonFilterEl = screen.getAllByTestId('pokemon-type-button');
+    expect(buttonFilterEl).toHaveLength(NUMBER_OF_TYPES);
+
+    // A partir da seleção de um botão de tipo, a Pokédex deve circular somente pelos pokémons daquele tipo;
+    // O texto do botão deve corresponder ao nome do tipo, ex. Psychic;
+    const buttonEletricEl = screen.getByRole('button', { name: /Electric/i });
+    userEvent.click(buttonEletricEl);
+    const pokeEletricEl = screen.getByText(/Pikachu/i);
+    expect(pokeEletricEl).toBeInTheDocument();
+    expect(buttonNextPokemon).toBeDisabled();
+
+    const buttonFireEl = screen.getByRole('button', { name: /Fire/i });
+    userEvent.click(buttonFireEl);
+    const pokeFireEl1 = screen.getByText(/Charmander/i);
+    expect(pokeFireEl1).toBeInTheDocument();
+    userEvent.click(buttonNextPokemon);
+    const pokeFireEl2 = screen.getByText(/Rapidash/i);
+    expect(pokeFireEl2).toBeInTheDocument();
+
+    const buttonBugEl = screen.getByRole('button', { name: /Bug/i });
+    userEvent.click(buttonBugEl);
+    const pokeBugEl = screen.getByText(/Caterpie/i);
+    expect(pokeBugEl).toBeInTheDocument();
+    expect(buttonNextPokemon).toBeDisabled();
+
+    // O botão All precisa estar sempre visível.
+    const buttonAllEl = screen.getByRole('button', { name: /All/i });
+    expect(buttonAllEl).toBeInTheDocument();
+  });
 });
