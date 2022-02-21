@@ -16,6 +16,7 @@ describe('Testa o componente NotFound.js', () => {
       const emojiEl = screen.getByText(/😭/i);
 
       expect(titleEl && emojiEl).toBeInTheDocument();
+      expect(titleEl.textContent).toBe('Page requested not found 😭');
     });
 
   it('Verifica se página mostra a imagem "https://media.giphy.com/media/kNSeTs31XBZ3G/giphy.gif".',
