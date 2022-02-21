@@ -69,4 +69,21 @@ describe('Testa o componente Pokemon.js', () => {
       // O link deve possuir a URL /pokemons/<id>, onde <id> é o id do Pokémon exibido;
       expect(history.location.pathname).toEqual(`/pokemons/${charmanderInfo.id}`);
     });
+
+  it('Verifica se existe um ícone de estrela nos Pokémons favoritados.', () => {
+    renderWithRouter(<App />);
+
+    const linkDetailsEl = screen.getByRole('link', { name: /More details/i });
+    userEvent.click(linkDetailsEl);
+
+    const inputCheckEl = screen.getByRole('checkbox');
+    userEvent.click(inputCheckEl);
+
+    // O ícone deve ser uma imagem com o atributo src contendo o caminho /star-icon.svg;
+    const starEl = screen.getAllByRole('img');
+    expect(starEl[1]).toHaveAttribute('src', '/star-icon.svg');
+    // A imagem deve ter o atributo alt igual a '<pokemon> is marked as favorite', onde <pokemon> é o nome do Pokémon exibido.
+    const starAltEl = screen.getByAltText(/Pikachu is marked as favorite/i);
+    expect(starAltEl).toBeInTheDocument();
+  });
 });
