@@ -36,18 +36,29 @@ describe('Testa o componente PokemonDetails.js', () => {
       expect(resumePokeEl).toBeInTheDocument();
     });
 
-/*
-  Teste se existe na página uma seção com os mapas contendo as localizações do pokémon
-    > Na seção de detalhes deverá existir um heading h2 com o texto Game Locations of <name>; onde <name> é o nome do Pokémon exibido.
-    > Todas as localizações do Pokémon devem ser mostradas na seção de detalhes;
-    > Devem ser exibidos, o nome da localização e uma imagem do mapa em cada localização;
-    > A imagem da localização deve ter um atributo src com a URL da localização;
-    > A imagem da localização deve ter um atributo alt com o texto <name> location, onde <name> é o nome do Pokémon;
+  it('Verifica se existe na página a seção de mapas contendo as localizações do pokémon.',
+    () => {
+      // Deverá existir um heading h2 com o texto Game Locations of <name>; onde <name> é o nome do Pokémon exibido.
+      const titleLocationEl = screen.getByRole('heading',
+        { name: /Game Locations of Ekans/i, level: 2 });
+      expect(titleLocationEl).toBeInTheDocument();
 
+      // Devem ser exibidos, o nome da localização e uma imagem do mapa em cada localização;
+      // Todas as localizações do Pokémon devem ser mostradas na seção de detalhes.
+      const locations = (pokemons.find((pokemon) => pokemon.name === 'Ekans').foundAt);
+      const locationEl = screen.getByText(locations[0].location);
+      expect(locationEl).toBeInTheDocument();
+
+      // A imagem da localização deve ter um atributo alt com o texto <name> location, onde <name> é o nome do Pokémon.
+      // A imagem da localização deve ter um atributo src com a URL da localização;
+      const imageMapEl = screen.getByAltText(/Ekans location/);
+      expect(imageMapEl).toHaveAttribute('src', locations[0].map);
+    });
+
+/*
   Teste se o usuário pode favoritar um pokémon através da página de detalhes.
     > A página deve exibir um checkbox que permite favoritar o Pokémon;
     > Cliques alternados no checkbox devem adicionar e remover respectivamente o Pokémon da lista de favoritos;
     > O label do checkbox deve conter o texto Pokémon favoritado?;
-
 */
 });
