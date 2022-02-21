@@ -3,14 +3,12 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import renderWithRouter from './renderWithRouter';
 import App from '../App';
+import pokemons from '../data';
 
 describe('Testa o componente Pokemon.js', () => {
-  beforeEach(() => {
-    renderWithRouter(<App />);
-  });
-
   it('Verifica se é renderizado um card com as informações de determinado pokémon.',
     () => {
+      renderWithRouter(<App />);
       const buttonFireEl = screen.getByRole('button', { name: /Fire/i });
       userEvent.click(buttonFireEl);
 
@@ -33,5 +31,42 @@ describe('Testa o componente Pokemon.js', () => {
 
       const imageAltTextEl = screen.getByAltText('Charmander sprite');
       expect(imageAltTextEl).toBeInTheDocument();
+    });
+
+  it('Verifica se o card do Pokémon contém um link para exibir detalhes deste Pokémon.',
+    () => {
+      const charmanderInfo = pokemons.find((pokemon) => pokemon.name === 'Charmander');
+      // Teste se o card contém um link de navegação para exibir detalhes deste Pokémon.
+      // O link deve possuir a URL /pokemons/<id>, onde <id> é o id do Pokémon exibido;
+      renderWithRouter(<App />);
+      const buttonFireEl = screen.getByRole('button', { name: /Fire/i });
+      userEvent.click(buttonFireEl);
+
+      const detailsLinkEl = screen.getByRole('link', { name: /More details/i });
+      expect(detailsLinkEl).toHaveAttribute('href', `/pokemons/${charmanderInfo.id}`);
+    });
+
+  it('Verifica se ao clicar no link, redireciona para a página de detalhes do Pokémon',
+    () => {
+      const charmanderInfo = pokemons.find((pokemon) => pokemon.name === 'Charmander');
+      const { history } = renderWithRouter(<App />);
+
+      const buttonFireEl = screen.getByRole('button', { name: /Fire/i });
+      userEvent.click(buttonFireEl);
+
+      const detailsLinkEl = screen.getByRole('link', { name: /More details/i });
+      userEvent.click(detailsLinkEl);
+
+      // verifica se as informações detalhadas do pokemon são renderizadas na tela
+      const detailsTitleEl = screen.getByRole('heading',
+        { name: /Charmander Details/i, level: 2 });
+      const summaryTitleEl = screen.getByRole('heading', { name: /Summary/i, level: 2 });
+      const locationTitleEl = screen.getByRole('heading',
+        { name: /Game Locations of Charmander/i, level: 2 });
+
+      expect(detailsTitleEl && summaryTitleEl && locationTitleEl).toBeInTheDocument();
+
+      // O link deve possuir a URL /pokemons/<id>, onde <id> é o id do Pokémon exibido;
+      expect(history.location.pathname).toEqual(`/pokemons/${charmanderInfo.id}`);
     });
 });
