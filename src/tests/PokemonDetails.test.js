@@ -55,10 +55,21 @@ describe('Testa o componente PokemonDetails.js', () => {
       expect(imageMapEl).toHaveAttribute('src', locations[0].map);
     });
 
-/*
-  Teste se o usuário pode favoritar um pokémon através da página de detalhes.
-    > A página deve exibir um checkbox que permite favoritar o Pokémon;
-    > Cliques alternados no checkbox devem adicionar e remover respectivamente o Pokémon da lista de favoritos;
-    > O label do checkbox deve conter o texto Pokémon favoritado?;
-*/
+  it('Verifica se o usuário pode favoritar um pokémon através da página de detalhes.',
+    () => {
+      // A página deve exibir um checkbox que permite favoritar o Pokémon.
+      // O label do checkbox deve conter o texto "Pokémon favoritado?"
+      const inputCheckboxEl = screen.getByRole('checkbox');
+      const labelEl = screen.getByLabelText('Pokémon favoritado?');
+      expect(inputCheckboxEl && labelEl).toBeInTheDocument();
+
+      // Cliques alternados no checkbox devem adicionar e remover respectivamente o Pokémon da lista de favoritos
+      userEvent.click(inputCheckboxEl);
+      const starAltEl = screen.getByAltText(/Ekans is marked as favorite/i);
+      expect(starAltEl).toBeInTheDocument();
+
+      userEvent.click(inputCheckboxEl);
+      const starAltNullEl = screen.queryByAltText(/Ekans is marked as favorite/i);
+      expect(starAltNullEl).toBeNull();
+    });
 });
